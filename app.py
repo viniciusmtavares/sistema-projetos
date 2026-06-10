@@ -10,9 +10,9 @@ import os
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "troque-em-producao")
+app.secret_key = os.environ.get("SECRET_KEY", "sistema_projetos_2026")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "postgresql://postgres:2204@localhost:5432/levantamentos")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1426,4 +1426,4 @@ def visualizar_licenciamento(id):
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
