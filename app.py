@@ -10,9 +10,9 @@ import os
 import pandas as pd
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "sistema_projetos_2026")
+app.secret_key = os.environ.get("SECRET_KEY", "troque-em-producao")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
