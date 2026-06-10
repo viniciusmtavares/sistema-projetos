@@ -1425,12 +1425,5 @@ def visualizar_licenciamento(id):
         levantamento=levantamento
     )
 
-@app.route("/criar_tabelas")
-def criar_tabelas():
-
-    db.create_all()
-
-    return "Tabelas criadas com sucesso!"
-
 if __name__ == "__main__":
     app.run(debug=True)
