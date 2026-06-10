@@ -12,7 +12,10 @@ import pandas as pd
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "sistema_projetos_2026")
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "postgresql://postgres:2204@localhost:5432/levantamentos")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:2204@localhost:5432/levantamentos")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
