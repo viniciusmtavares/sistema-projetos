@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}
+Meu Perfil
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-header mb-4">
+
+    <h2>Meu Perfil</h2>
+
+    <p>
+        Informações do usuário e alteração de senha
+    </p>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Usuário
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Nome</label>
+            <input
+                type="text"
+                class="form-control"
+                value="{{ usuario.nome }}"
+                readonly>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Matrícula</label>
+            <input
+                type="text"
+                class="form-control"
+                value="{{ usuario.usuario }}"
+                readonly>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Perfil</label>
+            <input
+                type="text"
+                class="form-control"
+                value="{{ usuario.perfil }}"
+                readonly>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4">
+
+    <h5 class="form-section-title">
+        Alterar Senha
+    </h5>
+
+    {% if erro %}
+        <div class="alert alert-danger">
+            {{ erro }}
+        </div>
+    {% endif %}
+
+    {% if sucesso %}
+        <div class="alert alert-success">
+            {{ sucesso }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Senha Atual
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="senha_atual"
+                required>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Nova Senha
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="nova_senha"
+                required>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Confirmar Nova Senha
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="confirmar_senha"
+                required>
+
+        </div>
+
+        <div class="text-end">
+
+            <button
+                type="submit"
+                class="btn btn-success">
+
+                Salvar Nova Senha
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

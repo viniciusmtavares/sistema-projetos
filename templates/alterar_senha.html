@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+Alterar Senha
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-header mb-4">
+
+    <h2>Alterar Senha</h2>
+
+    <p>
+        Atualize sua senha de acesso ao sistema
+    </p>
+
+</div>
+
+<div class="card-sistema p-4">
+
+    {% if erro %}
+
+        <div class="alert alert-danger">
+            {{ erro }}
+        </div>
+
+    {% endif %}
+
+    {% if sucesso %}
+
+        <div class="alert alert-success">
+            {{ sucesso }}
+        </div>
+
+    {% endif %}
+
+    <form method="POST">
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Senha Atual
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="senha_atual"
+                required>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Nova Senha
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="nova_senha"
+                required>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Confirmar Nova Senha
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="confirmar_senha"
+                required>
+
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <a
+                href="/"
+                class="btn btn-secondary">
+
+                Cancelar
+
+            </a>
+
+            <button
+                type="submit"
+                class="btn btn-success">
+
+                Salvar Nova Senha
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

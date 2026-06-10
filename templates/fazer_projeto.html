@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fazer Projeto
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Criar Projeto</h2>
+        <p>Preencha os dados do projeto com base no levantamento selecionado</p>
+    </div>
+
+    <a href="/levantamentos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Levantamento
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Alvo:</strong><br>
+            {{ levantamento.alvo }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Tipo de Alvo:</strong><br>
+            {{ levantamento.tipo_alvo }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Pacote:</strong><br>
+            {{ levantamento.pacote }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Tipo de Projeto:</strong><br>
+            {{ levantamento.tipo_projeto }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Tipo de Execução:</strong><br>
+            {{ levantamento.tipo_execucao }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Prioridade:</strong><br>
+            {{ levantamento.prioridade }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Data CCS:</strong><br>
+            {{ levantamento.data_ccs }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Data Cadastro:</strong><br>
+            {{ levantamento.data_cadastro }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Entrega Prevista:</strong><br>
+            {{ levantamento.entrega_prevista }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Cliente
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Conta Contrato:</strong><br>
+            {{ levantamento.conta_contrato }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Nome Cliente:</strong><br>
+            {{ levantamento.nome_cliente }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Contato:</strong><br>
+            {{ levantamento.contato }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados Técnicos
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <strong>Tipo CO:</strong><br>
+            {{ levantamento.tipo_co }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>Componente:</strong><br>
+            {{ levantamento.componente }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>PI:</strong><br>
+            {{ levantamento.pi }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>Licenciamento:</strong><br>
+            {{ levantamento.licenciamento }}
+        </div>
+
+    </div>
+
+    <p>
+        <strong>Descrição:</strong>
+    </p>
+
+    <div class="border rounded p-3 bg-light mb-3">
+        {{ levantamento.descricao }}
+    </div>
+
+    <p>
+        <strong>Ação do Projeto:</strong>
+    </p>
+
+    <div class="border rounded p-3 bg-light">
+        {{ levantamento.acao_projeto }}
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Localização
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Município:</strong><br>
+            {{ levantamento.municipio }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Regional:</strong><br>
+            {{ levantamento.regional }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Zona:</strong><br>
+            {{ levantamento.zona }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <strong>Latitude:</strong><br>
+            {{ levantamento.latitude }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <strong>Longitude:</strong><br>
+            {{ levantamento.longitude }}
+        </div>
+
+    </div>
+
+</div>
+
+{% if levantamento.anexo_levantamento %}
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Anexo Original do Levantamento
+    </h5>
+
+    <a
+        href="/baixar_anexo/{{ levantamento.anexo_levantamento }}"
+        class="btn btn-success">
+
+        Baixar Anexo Original
+
+    </a>
+
+    <p class="mt-2 mb-0">
+        <strong>Arquivo:</strong> {{ levantamento.anexo_levantamento }}
+    </p>
+
+</div>
+
+{% endif %}
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Informações do Levantamento de Campo
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Status do Levantamento:</strong><br>
+
+            {% if levantamento.status_levantamento == "ANALISE_EXPURGO" %}
+
+                <span class="badge bg-warning text-dark">
+                    Análise de Expurgo
+                </span>
+
+            {% elif levantamento.status_levantamento == "EXPURGADO" %}
+
+                <span class="badge bg-danger">
+                    Expurgado
+                </span>
+
+            {% elif levantamento.anexo_arquivo %}
+
+                <span class="badge bg-info text-dark">
+                    Levantamento Concluído
+                </span>
+
+            {% else %}
+
+                <span class="badge bg-warning text-dark">
+                    Em Levantamento
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Expurgo informado:</strong><br>
+
+            {% if levantamento.status_levantamento == "ANALISE_EXPURGO"
+                  or levantamento.status_levantamento == "EXPURGADO" %}
+
+                SIM
+
+            {% else %}
+
+                NÃO
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Anexo de Campo:</strong><br>
+
+            {% if levantamento.anexo_arquivo %}
+
+                <a href="/baixar_anexo/{{ levantamento.anexo_arquivo }}">
+                    {{ levantamento.anexo_arquivo }}
+                </a>
+
+            {% else %}
+
+                Sem anexo
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <p>
+        <strong>Observações do Campo:</strong>
+    </p>
+
+    <div class="border rounded p-3 bg-light">
+        {{ levantamento.observacoes or "Sem observações" }}
+    </div>
+
+</div>
+
+<form
+    method="POST"
+    action="/salvar_projeto/{{ levantamento.id }}"
+    enctype="multipart/form-data">
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Informações do Projeto
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Entrega Real</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="entrega_real"
+                    value="{{ levantamento.entrega_real or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nota SGO</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="nota_sgo"
+                    value="{{ levantamento.nota_sgo or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">BT</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="bt"
+                    value="{{ levantamento.bt or '' }}">
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">MT</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="mt"
+                    value="{{ levantamento.mt or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Poste</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="poste"
+                    value="{{ levantamento.poste or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Material</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="material"
+                    value="{{ levantamento.material or 0 }}">
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Mão de Obra</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="mao_de_obra"
+                    value="{{ levantamento.mao_de_obra or 0 }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Valor Total</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="valor_total"
+                    value="{{ levantamento.valor_total or 0 }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Licenciamento</label>
+
+                <select class="form-select" name="licenciamento" required>
+                   <option value="">Selecione</option>
+                    <option value="SIM"
+                       {% if levantamento.licenciamento == "SIM" %}selected{% endif %}>
+                        SIM
+                    </option>
+
+                    <option value="NÃO"
+                        {% if levantamento.licenciamento == "NÃO" %}selected{% endif %}>
+                        NÃO
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Observações do Projeto</label>
+            <textarea
+                class="form-control"
+                name="observacoes"
+                rows="4"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Anexo do Projeto</label>
+
+            <input
+                type="file"
+                class="form-control"
+                name="anexo_projeto">
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-5">
+
+        <a
+            href="/levantamentos"
+            class="btn btn-secondary">
+
+            Cancelar
+
+        </a>
+
+        <button
+            type="submit"
+            class="btn btn-success">
+
+            Salvar Projeto
+
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

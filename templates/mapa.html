@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}
+Mapa de Levantamentos
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="pagina-header">
+        <h2>Mapa de Levantamentos</h2>
+        <p>Visualização geográfica das solicitações</p>
+    </div>
+
+    <a href="/levantamentos" class="btn btn-secondary">
+        Voltar
+    </a>
+</div>
+
+<div class="card-sistema p-3 mb-3">
+
+    <div class="row align-items-end">
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Filtrar Status
+            </label>
+
+            <select
+                id="filtroStatus"
+                class="form-select"
+                onchange="filtrarMapa(this.value)">
+
+                <option value="TODOS">
+                    Todos
+                </option>
+
+                <option value="EM_LEVANTAMENTO">
+                    Em Levantamento
+                </option>
+
+                <option value="LEVANTAMENTO_CONCLUIDO">
+                    Levantamento Concluído
+                </option>
+
+                <option value="PROJETO_CRIADO">
+                    Projeto Criado
+                </option>
+
+                <option value="ANALISE_EXPURGO">
+                    Análise de Expurgo
+                </option>
+
+                <option value="EXPURGADO">
+                    Expurgado
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="text-muted">
+                Use a lista para filtrar os pontos exibidos no mapa. Para alternar entre mapa e satélite, use o controle no canto superior direito do mapa.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-3">
+
+    <div id="map" style="height:75vh; border-radius:12px; border:1px solid #ddd;"></div>
+
+</div>
+
+<div id="dados-mapa" style="display:none;">
+
+    {% for item in levantamentos %}
+
+        {% set status_mapa = "EM_LEVANTAMENTO" %}
+
+        {% if item.status_levantamento == "ANALISE_EXPURGO" %}
+            {% set status_mapa = "ANALISE_EXPURGO" %}
+        {% elif item.status_levantamento == "EXPURGADO" %}
+            {% set status_mapa = "EXPURGADO" %}
+        {% elif item.status_projeto %}
+            {% set status_mapa = "PROJETO_CRIADO" %}
+        {% elif item.anexo_arquivo %}
+            {% set status_mapa = "LEVANTAMENTO_CONCLUIDO" %}
+        {% endif %}
+
+        <div
+            class="ponto-mapa"
+            data-id="{{ item.id }}"
+            data-alvo="{{ item.alvo }}"
+            data-descricao="{{ item.descricao or 'Não informada' }}"
+            data-municipio="{{ item.municipio }}"
+            data-latitude="{{ item.latitude }}"
+            data-longitude="{{ item.longitude }}"
+            data-status="{{ status_mapa }}">
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+var map = L.map('map').setView([-9.6658, -35.7353], 8);
+
+var mapaNormal = L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }
+);
+
+var mapaSatelite = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri'
+    }
+);
+
+mapaNormal.addTo(map);
+
+var camadasBase = {
+    "Mapa": mapaNormal,
+    "Satélite": mapaSatelite
+};
+
+L.control.layers(camadasBase).addTo(map);
+
+var marcadores = [];
+
+function nomeStatus(status) {
+    if (status === "PROJETO_CRIADO") return "Projeto Criado";
+    if (status === "EXPURGADO") return "Expurgado";
+    if (status === "ANALISE_EXPURGO") return "Análise de Expurgo";
+    if (status === "LEVANTAMENTO_CONCLUIDO") return "Levantamento Concluído";
+    return "Em Levantamento";
+}
+
+document.querySelectorAll('.ponto-mapa').forEach(function(ponto) {
+
+    var lat = parseFloat(ponto.dataset.latitude);
+    var lng = parseFloat(ponto.dataset.longitude);
+
+    if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+        return;
+    }
+
+    var id = ponto.dataset.id;
+    var alvo = ponto.dataset.alvo;
+    var descricao = ponto.dataset.descricao;
+    var municipio = ponto.dataset.municipio;
+    var status = ponto.dataset.status;
+
+    var marker = L.marker([lat, lng]);
+
+    marker.bindTooltip(
+        "<b>" + alvo + "</b><br>" + municipio
+    );
+
+    marker.bindPopup(
+        "<div style='min-width:280px'>" +
+            "<b>ALVO</b><br>" + alvo +
+            "<hr>" +
+            "<b>DESCRIÇÃO</b><br>" + descricao +
+            "<hr>" +
+            "<b>MUNICÍPIO</b><br>" + municipio +
+            "<hr>" +
+            "<b>STATUS</b><br>" + nomeStatus(status) +
+            "<hr>" +
+            "<b>LATITUDE</b><br>" + lat +
+            "<hr>" +
+            "<b>LONGITUDE</b><br>" + lng +
+            "<hr>" +
+            "<a href='/visualizar/" + id + "' class='btn btn-primary btn-sm'>Visualizar</a>" +
+        "</div>"
+    );
+
+    marker.statusMapa = status;
+
+    marcadores.push(marker);
+
+    marker.addTo(map);
+
+});
+
+function filtrarMapa(statusFiltro) {
+
+    marcadores.forEach(function(marker) {
+        map.removeLayer(marker);
+    });
+
+    marcadores.forEach(function(marker) {
+
+        if (statusFiltro === "TODOS" || marker.statusMapa === statusFiltro) {
+            marker.addTo(map);
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

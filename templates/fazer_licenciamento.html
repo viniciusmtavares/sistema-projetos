@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}
+Fazer Licenciamento
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Licenciamento Ambiental</h2>
+        <p>Registro do estudo ambiental do projeto</p>
+    </div>
+
+    <a href="/licenciamentos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Projeto
+    </h5>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <strong>Alvo:</strong><br>
+            {{ levantamento.alvo }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Município:</strong><br>
+            {{ levantamento.municipio }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Regional:</strong><br>
+            {{ levantamento.regional }}
+        </div>
+    </div>
+
+    <p><strong>Descrição:</strong></p>
+
+    <div class="border rounded p-3 bg-light">
+        {{ levantamento.descricao }}
+    </div>
+
+</div>
+
+<form
+    method="POST"
+    action="/salvar_licenciamento/{{ levantamento.id }}"
+    enctype="multipart/form-data">
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Informações do Licenciamento
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Data Envio ao Órgão</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="data_envio_licenciamento"
+                    value="{{ levantamento.data_envio_licenciamento or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Data Retorno do Órgão</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="data_retorno_licenciamento"
+                    value="{{ levantamento.data_retorno_licenciamento or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Responsável</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="responsavel_licenciamento"
+                    value="{{ levantamento.responsavel_licenciamento or '' }}">
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Número da Licença</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="numero_licenca"
+                    value="{{ levantamento.numero_licenca or '' }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Status Licenciamento</label>
+
+                <select class="form-select" name="status_licenciamento" required>
+
+                    <option value="EM_ANALISE"
+                        {% if levantamento.status_licenciamento == "EM_ANALISE" %}selected{% endif %}>
+                        Em Análise
+                    </option>
+
+                    <option value="PENDENTE"
+                        {% if levantamento.status_licenciamento == "PENDENTE" %}selected{% endif %}>
+                        Pendente
+                    </option>
+
+                    <option value="REPROVADO"
+                        {% if levantamento.status_licenciamento == "REPROVADO" %}selected{% endif %}>
+                        Reprovado
+                    </option>
+
+                    <option value="APROVADO">
+                        Aprovado
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Observações</label>
+            <textarea
+                class="form-control"
+                name="observacoes_licenciamento"
+                rows="4">{{ levantamento.observacoes_licenciamento or '' }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Anexo do Licenciamento</label>
+
+            <input
+                type="file"
+                class="form-control"
+                name="anexo_licenciamento">
+
+            {% if levantamento.anexo_licenciamento %}
+                <div class="mt-2">
+                    <strong>Arquivo atual:</strong>
+                    <a href="/baixar_anexo/{{ levantamento.anexo_licenciamento }}">
+                        {{ levantamento.anexo_licenciamento }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-5">
+
+        <a href="/licenciamentos" class="btn btn-secondary">
+            Cancelar
+        </a>
+
+        <button type="submit" class="btn btn-success">
+            Salvar Licenciamento
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

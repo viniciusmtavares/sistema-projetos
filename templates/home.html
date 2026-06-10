@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}
+Sistema de Projetos
+{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+
+    <h1 class="titulo-pagina text-start">
+        Bem-vindo ao Sistema
+    </h1>
+
+    <p class="subtitulo text-start">
+        Gerencie levantamentos e projetos de forma integrada.
+    </p>
+
+</div>
+
+<div
+    id="dados-dashboard"
+    style="display:none;"
+    data-em-levantamento="{{ em_levantamento }}"
+    data-levantamento-concluido="{{ levantamento_concluido }}"
+    data-analise-expurgo="{{ analise_expurgo }}"
+    data-expurgados="{{ expurgados }}"
+    data-total-projetos="{{ total_projetos }}"
+    data-labels-levantamentos='{{ labels_levantamentos|tojson }}'
+    data-dados-levantamentos='{{ dados_levantamentos|tojson }}'
+    data-labels-projetos='{{ labels_projetos|tojson }}'
+    data-dados-projetos='{{ dados_projetos|tojson }}'>
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Total</h4>
+            <p>{{ total_levantamentos }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Em Levantamento</h4>
+            <p>{{ em_levantamento }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Lev. Concluído</h4>
+            <p>{{ levantamento_concluido }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Análise Expurgo</h4>
+            <p>{{ analise_expurgo }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Expurgados</h4>
+            <p>{{ expurgados }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card-resumo">
+            <h4>Projetos</h4>
+            <p>{{ total_projetos }}</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card-sistema p-4" style="height:420px;">
+
+            <h5 class="form-section-title">
+                Status dos Levantamentos
+            </h5>
+
+            <div style="height:320px;">
+                <canvas id="graficoStatus"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card-sistema p-4" style="height:420px;">
+
+            <h5 class="form-section-title">
+                Levantamentos por Regional
+            </h5>
+
+            <div style="height:320px;">
+                <canvas id="graficoLevantamentos"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card-sistema p-4" style="height:420px;">
+
+            <h5 class="form-section-title">
+                Projetos por Regional
+            </h5>
+
+            <div style="height:320px;">
+                <canvas id="graficoProjetos"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dadosDashboard = document.getElementById("dados-dashboard");
+
+const emLevantamento = Number(dadosDashboard.dataset.emLevantamento);
+const levantamentoConcluido = Number(dadosDashboard.dataset.levantamentoConcluido);
+const analiseExpurgo = Number(dadosDashboard.dataset.analiseExpurgo);
+const expurgados = Number(dadosDashboard.dataset.expurgados);
+const totalProjetos = Number(dadosDashboard.dataset.totalProjetos);
+
+const labelsLevantamentos = JSON.parse(dadosDashboard.dataset.labelsLevantamentos || "[]");
+const dadosLevantamentos = JSON.parse(dadosDashboard.dataset.dadosLevantamentos || "[]");
+
+const labelsProjetos = JSON.parse(dadosDashboard.dataset.labelsProjetos || "[]");
+const dadosProjetos = JSON.parse(dadosDashboard.dataset.dadosProjetos || "[]");
+
+new Chart(
+    document.getElementById("graficoStatus"),
+    {
+        type: "bar",
+        data: {
+            labels: [
+                "Em Lev.",
+                "Concluído",
+                "Expurgo",
+                "Expurgados",
+                "Projetos"
+            ],
+            datasets: [{
+                label: "Quantidade",
+                data: [
+                    emLevantamento,
+                    levantamentoConcluido,
+                    analiseExpurgo,
+                    expurgados,
+                    totalProjetos
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    }
+);
+
+new Chart(
+    document.getElementById("graficoLevantamentos"),
+    {
+        type: "bar",
+        data: {
+            labels: labelsLevantamentos,
+            datasets: [{
+                label: "Levantamentos",
+                data: dadosLevantamentos
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    }
+);
+
+new Chart(
+    document.getElementById("graficoProjetos"),
+    {
+        type: "bar",
+        data: {
+            labels: labelsProjetos,
+            datasets: [{
+                label: "Projetos",
+                data: dadosProjetos
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    }
+);
+
+</script>
+
+{% endblock %}

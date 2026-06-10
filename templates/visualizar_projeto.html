@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block title %}
+Visualizar Projeto
+{% endblock %}
+
+{% block content %}
+
+<style>
+.timeline {
+    position: relative;
+    margin-left: 15px;
+    padding-left: 30px;
+    border-left: 3px solid #0d6efd;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 18px;
+    height: 18px;
+    background: #0d6efd;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px rgba(13,110,253,.25);
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px 18px;
+    border: 1px solid #dee2e6;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    font-weight: 700;
+    color: #0b2f8a;
+}
+
+.timeline-content small {
+    color: #6c757d;
+}
+</style>
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Detalhes do Projeto</h2>
+        <p>Visualização completa do levantamento e do projeto executado</p>
+    </div>
+
+    <a href="/projetos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Resumo do Projeto
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+            <strong>Alvo:</strong><br>
+            {{ projeto.alvo }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>Nota SGO:</strong><br>
+            {{ projeto.nota_sgo }}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>Status Projeto:</strong><br>
+
+            {% if projeto.status_projeto %}
+                {% if 'CONCLU' in projeto.status_projeto.upper() %}
+                    <span class="badge bg-success">
+                        {{ projeto.status_projeto }}
+                    </span>
+                {% elif 'ANDAMENTO' in projeto.status_projeto.upper() %}
+                    <span class="badge bg-warning text-dark">
+                        {{ projeto.status_projeto }}
+                    </span>
+                {% elif 'PEND' in projeto.status_projeto.upper() %}
+                    <span class="badge bg-danger">
+                        {{ projeto.status_projeto }}
+                    </span>
+                {% else %}
+                    <span class="badge bg-primary">
+                        {{ projeto.status_projeto }}
+                    </span>
+                {% endif %}
+            {% else %}
+                <span class="badge bg-secondary">
+                    Sem status
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <strong>Valor Total:</strong><br>
+            R$ {{ "{:,.2f}".format(projeto.valor_total or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Levantamento
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3"><strong>ID:</strong><br>{{ projeto.id }}</div>
+        <div class="col-md-4 mb-3"><strong>Alvo:</strong><br>{{ projeto.alvo }}</div>
+        <div class="col-md-4 mb-3"><strong>Tipo de Alvo:</strong><br>{{ projeto.tipo_alvo }}</div>
+
+        <div class="col-md-4 mb-3"><strong>Pacote:</strong><br>{{ projeto.pacote }}</div>
+        <div class="col-md-4 mb-3"><strong>Tipo de Projeto:</strong><br>{{ projeto.tipo_projeto }}</div>
+        <div class="col-md-4 mb-3"><strong>Tipo de Execução:</strong><br>{{ projeto.tipo_execucao }}</div>
+
+        <div class="col-md-4 mb-3"><strong>Prioridade:</strong><br>{{ projeto.prioridade }}</div>
+        <div class="col-md-4 mb-3"><strong>Data CCS:</strong><br>{{ projeto.data_ccs }}</div>
+        <div class="col-md-4 mb-3"><strong>Data Cadastro:</strong><br>{{ projeto.data_cadastro }}</div>
+
+        <div class="col-md-4 mb-3"><strong>Entrega Prevista:</strong><br>{{ projeto.entrega_prevista }}</div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Cliente
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3"><strong>Conta Contrato:</strong><br>{{ projeto.conta_contrato }}</div>
+        <div class="col-md-4 mb-3"><strong>Nome Cliente:</strong><br>{{ projeto.nome_cliente }}</div>
+        <div class="col-md-4 mb-3"><strong>Contato:</strong><br>{{ projeto.contato }}</div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados Técnicos
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3"><strong>Tipo CO:</strong><br>{{ projeto.tipo_co }}</div>
+        <div class="col-md-3 mb-3"><strong>Componente:</strong><br>{{ projeto.componente }}</div>
+        <div class="col-md-3 mb-3"><strong>PI:</strong><br>{{ projeto.pi }}</div>
+        <div class="col-md-3 mb-3"><strong>Licenciamento:</strong><br>{{ projeto.licenciamento }}</div>
+
+    </div>
+
+    <p><strong>Descrição:</strong></p>
+
+    <div class="border rounded p-3 bg-light mb-3">
+        {{ projeto.descricao }}
+    </div>
+
+    <p><strong>Ação do Projeto:</strong></p>
+
+    <div class="border rounded p-3 bg-light">
+        {{ projeto.acao_projeto }}
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Localização
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3"><strong>Município:</strong><br>{{ projeto.municipio }}</div>
+        <div class="col-md-4 mb-3"><strong>Regional:</strong><br>{{ projeto.regional }}</div>
+        <div class="col-md-4 mb-3"><strong>Zona:</strong><br>{{ projeto.zona }}</div>
+
+        <div class="col-md-6 mb-3"><strong>Latitude:</strong><br>{{ projeto.latitude }}</div>
+        <div class="col-md-6 mb-3"><strong>Longitude:</strong><br>{{ projeto.longitude }}</div>
+
+    </div>
+
+</div>
+
+{% if projeto.anexo_arquivo %}
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Informações do Levantamento de Campo
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Status do Levantamento:</strong><br>
+
+            {% if projeto.status_levantamento == "ANALISE_EXPURGO" %}
+
+                <span class="badge bg-warning text-dark">
+                    Análise de Expurgo
+                </span>
+
+            {% elif projeto.status_levantamento == "EXPURGADO" %}
+
+                <span class="badge bg-danger">
+                    Expurgado
+                </span>
+
+            {% elif projeto.anexo_arquivo %}
+
+                <span class="badge bg-info text-dark">
+                    Levantamento Concluído
+                </span>
+
+            {% else %}
+
+                <span class="badge bg-warning text-dark">
+                    Em Levantamento
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Anexo de Campo:</strong><br>
+
+            <a href="/baixar_anexo/{{ projeto.anexo_arquivo }}">
+                {{ projeto.anexo_arquivo }}
+            </a>
+        </div>
+
+    </div>
+
+    <p><strong>Observações do Campo:</strong></p>
+
+    <div class="border rounded p-3 bg-light">
+        {{ projeto.observacoes or "Sem observações" }}
+    </div>
+
+</div>
+
+{% endif %}
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Dados do Projeto Executado
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3"><strong>Entrega Real:</strong><br>{{ projeto.entrega_real }}</div>
+        <div class="col-md-4 mb-3"><strong>Nota SGO:</strong><br>{{ projeto.nota_sgo }}</div>
+        <div class="col-md-4 mb-3"><strong>Status Levantamento:</strong><br>{{ projeto.status_levantamento }}</div>
+
+        <div class="col-md-4 mb-3"><strong>Status Projeto:</strong><br>{{ projeto.status_projeto }}</div>
+        <div class="col-md-4 mb-3"><strong>Motivo EXP:</strong><br>{{ projeto.motivo_exp }}</div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Quantitativos
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3"><strong>BT:</strong><br>{{ projeto.bt }}</div>
+        <div class="col-md-4 mb-3"><strong>MT:</strong><br>{{ projeto.mt }}</div>
+        <div class="col-md-4 mb-3"><strong>Poste:</strong><br>{{ projeto.poste }}</div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Valores
+    </h5>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <strong>Material:</strong><br>
+            R$ {{ "{:,.2f}".format(projeto.material or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Mão de Obra:</strong><br>
+            R$ {{ "{:,.2f}".format(projeto.mao_de_obra or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <strong>Valor Total:</strong><br>
+            R$ {{ "{:,.2f}".format(projeto.valor_total or 0).replace(",", "X").replace(".", ",").replace("X", ".") }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Observações
+    </h5>
+
+    <div class="border rounded p-3 bg-light">
+        {{ projeto.observacoes }}
+    </div>
+
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Anexo do Projeto
+    </h5>
+
+    {% if projeto.anexo_arquivo %}
+
+        <a
+            href="/baixar_anexo/{{ projeto.anexo_arquivo }}"
+            class="btn btn-success">
+
+            Baixar Anexo
+
+        </a>
+
+        <p class="mt-2 mb-0">
+            <strong>Arquivo:</strong> {{ projeto.anexo_arquivo }}
+        </p>
+
+    {% else %}
+
+        <p class="text-muted mb-0">
+            Sem anexo cadastrado.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Linha do Tempo
+    </h5>
+
+    {% if historicos %}
+
+        <div class="timeline">
+
+            {% for h in historicos %}
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div class="timeline-content">
+
+                        <h6>
+                            {{ h.acao }}
+                        </h6>
+
+                        <small>
+                            {{ h.data_hora.strftime('%d/%m/%Y') }}
+                            •
+                            {{ h.usuario_nome }}
+
+                            {% if h.usuario_login %}
+                                <br>
+                                {{ h.usuario_login }}
+                            {% endif %}
+                        </small>
+
+                        <p class="mt-2 mb-0">
+                            {{ h.detalhes or "Sem detalhes" }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info mb-0">
+            Nenhuma movimentação registrada.
+        </div>
+
+    {% endif %}
+
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-5">
+
+    <a href="/editar_projeto/{{ projeto.id }}" class="btn btn-warning">
+        Editar Projeto
+    </a>
+
+    <a href="/projetos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+{% endblock %}

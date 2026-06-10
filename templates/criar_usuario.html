@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}
+Usuários
+{% endblock %}
+
+{% block content %}
+
+<div class="pagina-header mb-4">
+    <h2>Usuários</h2>
+    <p>Cadastro e controle de acesso ao sistema</p>
+</div>
+
+<div class="card-sistema p-4 mb-4">
+
+    <h5 class="form-section-title">
+        Criar Usuário
+    </h5>
+
+    {% if erro %}
+        <div class="alert alert-danger">{{ erro }}</div>
+    {% endif %}
+
+    {% if sucesso %}
+        <div class="alert alert-success">{{ sucesso }}</div>
+    {% endif %}
+
+    <form method="POST">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" name="nome" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Matrícula</label>
+                <input type="text" class="form-control" name="matricula" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Perfil</label>
+
+                <select class="form-select" name="perfil" required>
+                    <option value="APPLUS">APPLUS</option>
+                    <option value="APPLUS">EQUATORIAL</option>
+                    <option value="TATICO">TÁTICO</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="text-end">
+
+            <button type="submit" class="btn btn-success">
+                Criar Usuário
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card-sistema p-4">
+
+    <h5 class="form-section-title">
+        Usuários Cadastrados
+    </h5>
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered align-middle mb-0">
+
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                    <th>Perfil</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for usuario in usuarios %}
+
+                <tr>
+
+                    <td>{{ usuario.nome }}</td>
+                    <td>{{ usuario.usuario }}</td>
+                    <td>{{ usuario.perfil }}</td>
+
+                    <td>
+                        {% if usuario.ativo %}
+                            <span class="badge bg-success">Ativo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inativo</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        {% if usuario.id != session.get("usuario_id") %}
+
+                            {% if usuario.ativo %}
+
+                                <a
+                                    href="/alterar_status_usuario/{{ usuario.id }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Deseja desativar este usuário?')">
+                                    Desativar
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="/alterar_status_usuario/{{ usuario.id }}"
+                                    class="btn btn-success btn-sm"
+                                    onclick="return confirm('Deseja reativar este usuário?')">
+                                    Reativar
+                                </a>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            <span class="text-muted">
+                                Usuário atual
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

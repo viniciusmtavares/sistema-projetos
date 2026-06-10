@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+Editar Projeto
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Editar Projeto</h2>
+        <p>Atualize as informações do projeto cadastrado</p>
+    </div>
+
+    <a href="/projetos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+<form
+    method="POST"
+    action="/atualizar_projeto/{{ projeto.id }}"
+    enctype="multipart/form-data">
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Informações Gerais
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Entrega Real</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="entrega_real"
+                    value="{{ projeto.entrega_real or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nota SGO</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="nota_sgo"
+                    value="{{ projeto.nota_sgo or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Status Levantamento</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="status_levantamento"
+                    value="{{ projeto.status_levantamento or '' }}">
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Status Projeto</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="status_projeto"
+                    value="{{ projeto.status_projeto or '' }}">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Motivo EXP</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="motivo_exp"
+                    value="{{ projeto.motivo_exp or '' }}">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Quantitativos
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">BT</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="bt"
+                    value="{{ projeto.bt or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">MT</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="mt"
+                    value="{{ projeto.mt or '' }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Poste</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="poste"
+                    value="{{ projeto.poste or '' }}">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Valores
+        </h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Material</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="material"
+                    value="{{ projeto.material or 0 }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Mão de Obra</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="mao_de_obra"
+                    value="{{ projeto.mao_de_obra or 0 }}">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Valor Total</label>
+                <input
+                    type="number"
+                    step="0.01"
+                    class="form-control"
+                    name="valor_total"
+                    value="{{ projeto.valor_total or 0 }}">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Observações
+        </h5>
+
+        <textarea
+            class="form-control"
+            name="observacoes"
+            rows="4">{{ projeto.observacoes or '' }}</textarea>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">
+            Anexo do Projeto
+        </h5>
+
+        <input
+            type="file"
+            class="form-control"
+            name="anexo_arquivo">
+
+        {% if projeto.anexo_arquivo %}
+
+            <div class="mt-3">
+
+                <strong>Arquivo atual:</strong>
+
+                <a href="/baixar_anexo/{{ projeto.anexo_arquivo }}">
+                    {{ projeto.anexo_arquivo }}
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-5">
+
+        <a href="/projetos" class="btn btn-secondary">
+            Cancelar
+        </a>
+
+        <button type="submit" class="btn btn-success">
+            Salvar Alterações
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

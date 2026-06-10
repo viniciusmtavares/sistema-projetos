@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}
+Mapa de Projetos
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Mapa de Projetos</h2>
+        <p>Visualização geográfica dos projetos cadastrados</p>
+    </div>
+
+    <a href="/projetos" class="btn btn-secondary">
+        Voltar
+    </a>
+
+</div>
+
+<div class="card-sistema p-3 mb-3">
+
+    <div class="row align-items-end">
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Filtrar Licenciamento
+            </label>
+
+            <select
+                id="filtroLicenciamento"
+                class="form-select"
+                onchange="filtrarMapa()">
+
+                <option value="TODOS">
+                    Todos
+                </option>
+
+                <option value="SIM">
+                    Licenciamento SIM
+                </option>
+
+                <option value="NAO">
+                    Licenciamento NÃO
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Filtrar Regional
+            </label>
+
+            <select
+                id="filtroRegional"
+                class="form-select"
+                onchange="filtrarMapa()">
+
+                <option value="TODOS">
+                    Todas
+                </option>
+
+                {% for item in projetos %}
+                    {% if item.regional %}
+                        <option value="{{ item.regional }}">
+                            {{ item.regional }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="text-muted">
+                Use os filtros para visualizar projetos por licenciamento ou regional.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-3">
+
+    <div id="map" style="height:75vh; border-radius:12px; border:1px solid #ddd;"></div>
+
+</div>
+
+<div id="dados-mapa" style="display:none;">
+
+    {% for item in projetos %}
+
+        <div
+            class="ponto-mapa"
+            data-id="{{ item.id }}"
+            data-alvo="{{ item.alvo }}"
+            data-descricao="{{ item.descricao or 'Não informada' }}"
+            data-municipio="{{ item.municipio }}"
+            data-regional="{{ item.regional }}"
+            data-licenciamento="{{ item.licenciamento }}"
+            data-nota-sgo="{{ item.nota_sgo }}"
+            data-latitude="{{ item.latitude }}"
+            data-longitude="{{ item.longitude }}">
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+var map = L.map('map').setView([-9.6658, -35.7353], 8);
+
+var mapaNormal = L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }
+);
+
+var mapaSatelite = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri'
+    }
+);
+
+mapaNormal.addTo(map);
+
+var camadasBase = {
+    "Mapa": mapaNormal,
+    "Satélite": mapaSatelite
+};
+
+L.control.layers(camadasBase).addTo(map);
+
+var marcadores = [];
+
+document.querySelectorAll('.ponto-mapa').forEach(function(ponto) {
+
+    var lat = parseFloat(ponto.dataset.latitude);
+    var lng = parseFloat(ponto.dataset.longitude);
+
+    if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+        return;
+    }
+
+    var id = ponto.dataset.id;
+    var alvo = ponto.dataset.alvo;
+    var descricao = ponto.dataset.descricao;
+    var municipio = ponto.dataset.municipio;
+    var regional = ponto.dataset.regional;
+    var licenciamento = ponto.dataset.licenciamento;
+    var notaSgo = ponto.dataset.notaSgo;
+
+    var marker = L.marker([lat, lng]);
+
+    marker.bindTooltip(
+        "<b>" + alvo + "</b><br>" + municipio
+    );
+
+    marker.bindPopup(
+        "<div style='min-width:280px'>" +
+            "<b>ALVO</b><br>" + alvo +
+            "<hr>" +
+            "<b>NOTA SGO</b><br>" + (notaSgo || "-") +
+            "<hr>" +
+            "<b>DESCRIÇÃO</b><br>" + descricao +
+            "<hr>" +
+            "<b>MUNICÍPIO</b><br>" + municipio +
+            "<hr>" +
+            "<b>REGIONAL</b><br>" + regional +
+            "<hr>" +
+            "<b>LICENCIAMENTO</b><br>" + licenciamento +
+            "<hr>" +
+            "<b>LATITUDE</b><br>" + lat +
+            "<hr>" +
+            "<b>LONGITUDE</b><br>" + lng +
+            "<hr>" +
+            "<a href='/visualizar_projeto/" + id + "' class='btn btn-primary btn-sm'>Visualizar Projeto</a>" +
+        "</div>"
+    );
+
+    marker.regional = regional;
+    marker.licenciamento = licenciamento;
+
+    marcadores.push(marker);
+
+    marker.addTo(map);
+
+});
+
+function filtrarMapa() {
+
+    var filtroLicenciamento = document.getElementById("filtroLicenciamento").value;
+    var filtroRegional = document.getElementById("filtroRegional").value;
+
+    marcadores.forEach(function(marker) {
+        map.removeLayer(marker);
+    });
+
+    marcadores.forEach(function(marker) {
+
+        var mostrar = true;
+
+        if (filtroLicenciamento !== "TODOS" && marker.licenciamento !== filtroLicenciamento) {
+            mostrar = false;
+        }
+
+        if (filtroRegional !== "TODOS" && marker.regional !== filtroRegional) {
+            mostrar = false;
+        }
+
+        if (mostrar) {
+            marker.addTo(map);
+        }
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

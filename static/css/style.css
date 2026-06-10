@@ -1,0 +1,530 @@
+:root {
+    --azul-principal: #0D2D8C;
+    --azul-secundario: #1A45B8;
+    --fundo: #F4F7FB;
+    --branco: #FFFFFF;
+    --texto: #1F2937;
+}
+
+body {
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ==========================
+   TOPO
+========================== */
+
+.topo-sistema {
+    background: linear-gradient(
+        90deg,
+        #0D2D8C 0%,
+        #1239A6 50%,
+        #0D2D8C 100%
+    );
+
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 30px;
+    gap: 20px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.logo-sistema {
+    height: 50px;
+    width: auto;
+
+    object-fit: contain;
+}
+
+.titulo-topo {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ==========================
+   CARDS
+========================== */
+
+.card-sistema {
+    background: var(--branco);
+    border-radius: 18px;
+    border: none;
+
+    box-shadow:
+        0 6px 20px rgba(13, 45, 140, 0.10);
+
+    transition: 0.3s;
+}
+
+.card-sistema:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(13, 45, 140, 0.18);
+}
+
+/* ==========================
+   BOTÕES
+========================== */
+
+.btn-azul {
+    background: var(--azul-principal);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-azul:hover {
+    background: var(--azul-secundario);
+    color: white;
+}
+
+/* ==========================
+   TÍTULOS
+========================== */
+
+.titulo-pagina {
+    color: var(--azul-principal);
+    font-weight: 700;
+}
+
+.subtitulo {
+    color: #4B5563;
+}
+
+/* ==========================
+   TABELAS
+========================== */
+
+.table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table thead {
+    background: var(--azul-principal);
+    color: white;
+}
+
+.table thead th {
+    border: none;
+}
+
+.table tbody tr:hover {
+    background: #EEF3FF;
+}
+
+/* ==========================
+   FORMULÁRIOS
+========================== */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--azul-principal);
+
+    box-shadow:
+        0 0 0 0.15rem rgba(13, 45, 140, 0.25);
+}
+
+/* ==========================
+   CARDS DE RESUMO
+========================== */
+
+.card-resumo {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.card-resumo h4 {
+    color: var(--azul-principal);
+    font-weight: bold;
+}
+
+.card-resumo p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* ==========================
+   RODAPÉ
+========================== */
+
+.footer-sistema {
+    background: linear-gradient(
+        90deg,
+        #0D2D8C 0%,
+        #1239A6 50%,
+        #0D2D8C 100%
+    );
+
+    color: white;
+
+    padding: 18px;
+
+    text-align: center;
+
+    margin-top: 60px;
+
+    box-shadow:
+        0 -4px 10px rgba(0, 0, 0, 0.10);
+}
+
+.sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: #0D2D8C;
+
+    padding-top: 30px;
+
+    box-shadow: 3px 0 15px rgba(0,0,0,.15);
+}
+
+.logo-menu {
+
+    width: 170px;
+
+    display: block;
+
+    margin: auto;
+    margin-bottom: 40px;
+}
+
+.sidebar a {
+
+    display: block;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 15px 25px;
+
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+
+    background: rgba(255,255,255,.1);
+}
+
+.content {
+
+    margin-left: 250px;
+
+    padding: 40px;
+}
+
+/* ==========================
+   MENU LATERAL
+========================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #0D2D8C 0%,
+        #1239A6 100%
+    );
+
+    padding-top: 25px;
+
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.15);
+}
+
+.logo-menu {
+    width: 170px;
+    display: block;
+    margin: auto;
+    margin-bottom: 35px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 15px 25px;
+
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar a i {
+    font-size: 20px;
+}
+
+.menu-ativo {
+    background: rgba(255, 255, 255, 0.18);
+    border-left: 5px solid white;
+}
+
+.content {
+    margin-left: 250px;
+    padding: 40px;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.usuario-menu {
+    color: white;
+    padding: 15px 25px;
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+/* ==========================
+   HOME DASHBOARD
+========================== */
+
+.home-card {
+    text-align: center;
+}
+
+.home-card .btn {
+    min-width: 260px;
+}
+
+.home-card p {
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-resumo {
+    min-height: 125px;
+}
+
+.card-resumo h4 {
+    font-size: 18px;
+}
+
+.card-resumo p {
+    color: var(--azul-principal);
+}
+
+/* ==========================
+   CABEÇALHO DAS PÁGINAS
+========================== */
+
+.pagina-header h2 {
+    color: var(--azul-principal);
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.pagina-header p {
+    color: #6B7280;
+    margin: 0;
+}
+
+/* ==========================
+   AJUSTE DAS TABELAS
+========================== */
+
+.table {
+    font-size: 14px;
+}
+
+.table thead th {
+    background: var(--azul-principal);
+    color: white;
+    vertical-align: middle;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table .btn {
+    margin: 2px;
+}
+
+/* MENU LATERAL COMPACTO */
+
+.sidebar {
+    width: 80px;
+}
+
+.content {
+    margin-left: 80px;
+    padding: 40px;
+}
+
+.logo-menu {
+    width: 55px;
+    display: block;
+    margin: 25px auto 35px auto;
+}
+
+.sidebar a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    text-decoration: none;
+
+    padding: 18px 0;
+
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar a i {
+    font-size: 24px;
+}
+
+.menu-ativo {
+    background: rgba(255, 255, 255, 0.18);
+    border-left: 5px solid white;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.usuario-menu {
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* CABEÇALHO DAS PÁGINAS */
+
+.pagina-header h2 {
+    color: var(--azul-principal);
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.pagina-header p {
+    color: #6B7280;
+    margin: 0;
+}
+
+/* TABELA */
+
+.table {
+    font-size: 14px;
+}
+
+.table thead th {
+    background: var(--azul-principal);
+    color: white;
+    vertical-align: middle;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.table .btn {
+    margin: 2px;
+}
+
+.form-section-title {
+    color: var(--azul-principal);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #EEF3FF;
+}
+
+.card-sistema input,
+.card-sistema select,
+.card-sistema textarea {
+    border-radius: 10px;
+}
+
+#mapCadastro {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.timeline {
+    position: relative;
+    margin-left: 15px;
+    padding-left: 30px;
+    border-left: 3px solid #0d6efd;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -40px;
+    top: 5px;
+    width: 18px;
+    height: 18px;
+    background: #0d6efd;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px rgba(13,110,253,.25);
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    font-weight: 700;
+    color: #0b2f8a;
+}
+
+.timeline-content small {
+    color: #6c757d;
+}

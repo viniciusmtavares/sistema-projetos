@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block title %}
+Levantamentos
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Levantamentos</h2>
+        <p>Gerenciamento de solicitações cadastradas</p>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        {% if session.get("usuario_perfil") == "TATICO" %}
+
+            <a href="/novo" class="btn btn-success" title="Novo Levantamento">
+                <i class="bi bi-plus-lg"></i>
+            </a>
+
+            <a href="/importar_levantamentos" class="btn btn-secondary" title="Importar Excel">
+                <i class="bi bi-upload"></i>
+            </a>
+
+        {% endif %}
+
+        <a href="/exportar_levantamentos" class="btn btn-primary" title="Exportar Excel">
+            <i class="bi bi-download"></i>
+        </a>
+
+        <a href="/mapa" class="btn btn-info" title="Mapa">
+            <i class="bi bi-geo-alt-fill"></i>
+        </a>
+
+    </div>
+
+</div>
+
+<div class="card-sistema p-3 mb-4">
+
+    <form method="GET" action="/levantamentos">
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="busca"
+                    value="{{ busca }}"
+                    placeholder="Buscar">
+            </div>
+
+            <div class="col-md-3">
+                <select
+                    class="form-select"
+                    name="status">
+
+                    <option value="">Todos os Status</option>
+
+                    <option value="EM_LEVANTAMENTO"
+                        {% if status == "EM_LEVANTAMENTO" %}selected{% endif %}>
+                        Em Levantamento
+                    </option>
+
+                    <option value="PROJETO_CRIADO"
+                        {% if status == "PROJETO_CRIADO" %}selected{% endif %}>
+                        Projeto Criado
+                    </option>
+
+                    <option value="ANALISE_EXPURGO"
+                        {% if status == "ANALISE_EXPURGO" %}selected{% endif %}>
+                        Análise de Expurgo
+                    </option>
+
+                    <option value="EXPURGADO"
+                        {% if status == "EXPURGADO" %}selected{% endif %}>
+                        Expurgado
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-azul w-100">
+                    Buscar
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card-sistema p-3">
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered align-middle mb-0">
+
+            <thead>
+                <tr>
+                    <th>Alvo</th>
+                    <th>Tipo de Alvo</th>
+                    <th>Descrição</th>
+                    <th>Município</th>
+                    <th>Regional</th>
+                    <th>Data Cadastro</th>
+                    <th>Entrega Prevista</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for item in levantamentos %}
+
+                <tr>
+
+                    <td>{{ item.alvo }}</td>
+                    <td>{{ item.tipo_alvo }}</td>
+
+                    <td>
+                        {{ (item.descricao or '')[:60] }}
+                        {% if item.descricao and item.descricao|length > 60 %}
+                            ...
+                        {% endif %}
+                    </td>
+
+                    <td>{{ item.municipio }}</td>
+                    <td>{{ item.regional }}</td>
+                    <td>{{ item.data_cadastro }}</td>
+                    <td>{{ item.entrega_prevista }}</td>
+
+                    <td>
+
+                        {% if item.status_levantamento == "ANALISE_EXPURGO" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Análise de Expurgo
+                            </span>
+
+                        {% elif item.status_levantamento == "EXPURGADO" %}
+
+                            <span class="badge bg-danger">
+                                Expurgado
+                            </span>
+
+                        {% elif item.status_projeto %}
+
+                            <span class="badge bg-success">
+                                Projeto Criado
+                            </span>
+
+                        {% elif item.anexo_arquivo %}
+
+                            <span class="badge bg-info text-dark">
+                                Levantamento Concluído
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-warning text-dark">
+                                Em Levantamento
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if item.status_levantamento == "ANALISE_EXPURGO" %}
+
+                            <a
+                                href="/visualizar_expurgo/{{ item.id }}"
+                                class="btn btn-warning btn-sm"
+                                title="Visualizar Análise de Expurgo">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            {% if session.get("usuario_perfil") == "TATICO" %}
+
+                                <a
+                                    href="/excluir/{{ item.id }}"
+                                    class="btn btn-danger btn-sm"
+                                    title="Excluir"
+                                    onclick="return confirm('Deseja excluir este levantamento?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            {% endif %}
+
+                        {% elif item.status_levantamento == "EXPURGADO" %}
+
+                            <a
+                                href="/visualizar_expurgo/{{ item.id }}"
+                                class="btn btn-danger btn-sm"
+                                title="Visualizar Expurgo">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            {% if session.get("usuario_perfil") == "TATICO" %}
+
+                                <a
+                                    href="/excluir/{{ item.id }}"
+                                    class="btn btn-danger btn-sm"
+                                    title="Excluir"
+                                    onclick="return confirm('Deseja excluir este levantamento?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            {% endif %}
+
+                        {% elif item.status_projeto %}
+
+                            <a
+                                href="/visualizar_projeto/{{ item.id }}"
+                                class="btn btn-primary btn-sm"
+                                title="Visualizar Projeto">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="/visualizar/{{ item.id }}"
+                                class="btn btn-primary btn-sm"
+                                title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </a>
+
+                            {% if session.get("usuario_perfil") == "TATICO" %}
+
+                                <a
+                                    href="/editar_levantamento/{{ item.id }}"
+                                    class="btn btn-warning btn-sm"
+                                    title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                            {% endif %}
+
+                            {% if item.anexo_arquivo %}
+
+                                <a
+                                    href="/fazer_projeto/{{ item.id }}"
+                                    class="btn btn-success btn-sm"
+                                    title="Fazer Projeto">
+                                    <i class="bi bi-folder-plus"></i>
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="/registrar_levantamento/{{ item.id }}"
+                                    class="btn btn-info btn-sm"
+                                    title="Registrar Levantamento">
+                                    <i class="bi bi-clipboard-check"></i>
+                                </a>
+
+                            {% endif %}
+
+                            {% if session.get("usuario_perfil") == "TATICO" %}
+
+                                <a
+                                    href="/excluir/{{ item.id }}"
+                                    class="btn btn-danger btn-sm"
+                                    title="Excluir"
+                                    onclick="return confirm('Deseja excluir este levantamento?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center mb-0">
+
+            {% if pagination.has_prev %}
+
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="{{ url_for('levantamentos', page=pagination.prev_num, busca=busca, status=status) }}">
+                        Anterior
+                    </a>
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        Anterior
+                    </span>
+                </li>
+
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+
+                {% if page_num %}
+
+                    {% if page_num == pagination.page %}
+
+                        <li class="page-item active">
+                            <span class="page-link">
+                                {{ page_num }}
+                            </span>
+                        </li>
+
+                    {% else %}
+
+                        <li class="page-item">
+                            <a
+                                class="page-link"
+                                href="{{ url_for('levantamentos', page=page_num, busca=busca, status=status) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            ...
+                        </span>
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+            {% if pagination.has_next %}
+
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="{{ url_for('levantamentos', page=pagination.next_num, busca=busca, status=status) }}">
+                        Próxima
+                    </a>
+                </li>
+
+            {% else %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        Próxima
+                    </span>
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{% endblock %}

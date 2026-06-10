@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}
+Licenciamentos
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Licenciamentos</h2>
+        <p>Gerenciamento dos estudos ambientais dos projetos</p>
+    </div>
+
+</div>
+
+<div class="card-sistema p-3 mb-4">
+
+    <form method="GET" action="/licenciamentos">
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="busca"
+                    value="{{ busca }}"
+                    placeholder="Buscar">
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" name="status">
+
+                    <option value="">Todos os Status</option>
+
+                    <option value="EM_ANALISE"
+                        {% if status == "EM_ANALISE" %}selected{% endif %}>
+                        Em Análise
+                    </option>
+
+                    <option value="PENDENTE"
+                        {% if status == "PENDENTE" %}selected{% endif %}>
+                        Pendente
+                    </option>
+
+                    <option value="REPROVADO"
+                        {% if status == "REPROVADO" %}selected{% endif %}>
+                        Reprovado
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-azul w-100">
+                    Buscar
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card-sistema p-3">
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered align-middle mb-0">
+
+            <thead>
+                <tr>
+                    <th>Alvo</th>
+                    <th>Descrição</th>
+                    <th>Município</th>
+                    <th>Regional</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for item in licenciamentos %}
+
+                <tr>
+                    <td>{{ item.alvo }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.municipio }}</td>
+                    <td>{{ item.regional }}</td>
+
+                    <td>
+                        {% if item.status_licenciamento == "EM_ANALISE" %}
+                            <span class="badge bg-warning text-dark">
+                                Em Análise
+                            </span>
+                        {% elif item.status_licenciamento == "PENDENTE" %}
+                            <span class="badge bg-danger">
+                                Pendente
+                            </span>
+                        {% elif item.status_licenciamento == "REPROVADO" %}
+                            <span class="badge bg-danger">
+                                Reprovado
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                {{ item.status_licenciamento }}
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a
+                            href="/fazer_licenciamento/{{ item.id }}"
+                            class="btn btn-warning btn-sm"
+                            title="Fazer Licenciamento">
+                            <i class="bi bi-tree-fill"></i>
+                        </a>
+
+                        <a
+                            href="/visualizar/{{ item.id }}"
+                            class="btn btn-primary btn-sm"
+                            title="Visualizar">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ url_for('licenciamentos', page=pagination.prev_num, busca=busca, status=status) }}">
+                        Anterior
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+
+                {% if page_num %}
+
+                    {% if page_num == pagination.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="{{ url_for('licenciamentos', page=page_num, busca=busca, status=status) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                {% else %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ url_for('licenciamentos', page=pagination.next_num, busca=busca, status=status) }}">
+                        Próxima
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+</div>
+
+{% endblock %}

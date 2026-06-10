@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}
+Expurgos
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="pagina-header">
+        <h2>Expurgos</h2>
+        <p>Gerenciamento de levantamentos indicados ou confirmados como expurgo</p>
+    </div>
+
+</div>
+
+<div class="card-sistema p-3 mb-4">
+
+    <form method="GET" action="/expurgos">
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <input
+                    type="text"
+                    class="form-control"
+                    name="busca"
+                    value="{{ busca }}"
+                    placeholder="Buscar">
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select" name="status">
+
+                    <option value="">Todos os Status</option>
+
+                    <option value="ANALISE_EXPURGO"
+                        {% if status == "ANALISE_EXPURGO" %}selected{% endif %}>
+                        Análise de Expurgo
+                    </option>
+
+                    <option value="EXPURGADO"
+                        {% if status == "EXPURGADO" %}selected{% endif %}>
+                        Expurgado
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-azul w-100">
+                    Buscar
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card-sistema p-3">
+
+    <div class="table-responsive">
+
+        <table class="table table-striped table-bordered align-middle mb-0">
+
+            <thead>
+                <tr>
+                    <th>Alvo</th>
+                    <th>Tipo de Alvo</th>
+                    <th>Descrição</th>
+                    <th>Município</th>
+                    <th>Regional</th>
+                    <th>Data Cadastro</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for item in expurgos %}
+
+                <tr>
+
+                    <td>{{ item.alvo }}</td>
+                    <td>{{ item.tipo_alvo }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.municipio }}</td>
+                    <td>{{ item.regional }}</td>
+                    <td>{{ item.data_cadastro }}</td>
+
+                    <td>
+                        {% if item.status_levantamento == "ANALISE_EXPURGO" %}
+                            <span class="badge bg-warning text-dark">
+                                Análise de Expurgo
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger">
+                                Expurgado
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="/visualizar_expurgo/{{ item.id }}"
+                            class="btn btn-primary btn-sm"
+                            title="Visualizar">
+                            <i class="bi bi-eye"></i>
+                        </a>
+
+                        {% if item.status_levantamento == "ANALISE_EXPURGO"
+                              and session.get("usuario_perfil") == "TATICO" %}
+
+                            <a
+                                href="/retornar_levantamento/{{ item.id }}"
+                                class="btn btn-warning btn-sm"
+                                title="Retornar para Levantamento"
+                                onclick="return confirm('Deseja retornar este item para Em Levantamento?')">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+
+                            <a
+                                href="/confirmar_expurgo/{{ item.id }}"
+                                class="btn btn-danger btn-sm"
+                                title="Confirmar Expurgo"
+                                onclick="return confirm('Deseja confirmar o expurgo deste levantamento?')">
+                                <i class="bi bi-check-lg"></i>
+                            </a>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center mb-0">
+
+            {% if pagination.has_prev %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ url_for('expurgos', page=pagination.prev_num, busca=busca, status=status) }}">
+                        Anterior
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+
+                {% if page_num %}
+
+                    {% if page_num == pagination.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="{{ url_for('expurgos', page=page_num, busca=busca, status=status) }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                {% else %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+            {% if pagination.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="{{ url_for('expurgos', page=pagination.next_num, busca=busca, status=status) }}">
+                        Próxima
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+</div>
+
+{% endblock %}

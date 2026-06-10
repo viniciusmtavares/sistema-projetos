@@ -1,0 +1,418 @@
+{% extends "base.html" %}
+
+{% block title %}
+Nova Solicitação
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<div class="pagina-header mb-4">
+
+    <h2>Nova Solicitação</h2>
+
+    <p>Cadastro de novo levantamento</p>
+
+</div>
+
+<form method="POST" action="/salvar" enctype="multipart/form-data">
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Dados do Projeto</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Alvo</label>
+                <input type="text" class="form-control" name="alvo" required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tipo de Alvo</label>
+
+                <select class="form-select" name="tipo_alvo">
+                    <option value="">Selecione</option>
+                    <option>CO</option>
+                    <option>PG</option>
+                    <option>NS</option>
+                    <option>AL</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Pacote</label>
+
+                <select class="form-select" name="pacote">
+                    <option value="">Selecione</option>
+                    <option>GIRO</option>
+                    <option>PASSIVO</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Tipo de Projeto</label>
+
+                <select class="form-select" name="tipo_projeto">
+                    <option value="">Selecione</option>
+                    <option>EXECUTIVO</option>
+                    <option>CONVERSÃO</option>
+                    <option>MODULAR</option>
+                    <option>ANÁLISE</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Tipo de Execução</label>
+
+                <select class="form-select" name="tipo_execucao">
+                    <option value="">Selecione</option>
+                    <option>LEVANTAMENTO</option>
+                    <option>CARTEIRA</option>
+                    <option>CONVERSÃO</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Prioridade</label>
+
+                <select class="form-select" name="prioridade">
+                    <option value="">Selecione</option>
+                    <option>REGULADO</option>
+                    <option>INSTITUCIONAL</option>
+                    <option>OUVIDORIA</option>
+                    <option>INTERNO</option>
+                    <option>JURÍDICO</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data CCS</label>
+                <input type="date" class="form-control" name="data_ccs">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Dados do Cliente</h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Conta Contrato</label>
+                <input type="text" class="form-control" name="conta_contrato">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nome Cliente</label>
+                <input type="text" class="form-control" name="nome_cliente">
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Contato</label>
+                <input type="text" class="form-control" name="contato">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Dados Técnicos</h5>
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Tipo CO</label>
+                <input type="text" class="form-control" name="tipo_co">
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Componente</label>
+                <input type="text" class="form-control" name="componente">
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <label class="form-label">PI</label>
+
+                <select class="form-select" name="pi">
+                    <option value="">Selecione</option>
+                    <option>UNI</option>
+                    <option>UNR</option>
+                    <option>SEQ</option>
+                    <option>ASC</option>
+                    <option>BCP</option>
+                    <option>BRT</option>
+                    <option>CCF</option>
+                    <option>DIF</option>
+                    <option>DIS</option>
+                    <option>DIV</option>
+                    <option>ERD</option>
+                    <option>EUR</option>
+                    <option>FIM</option>
+                    <option>MBT</option>
+                    <option>MCJ</option>
+                    <option>MCR</option>
+                    <option>MEL</option>
+                    <option>MGD</option>
+                    <option>MMT</option>
+                    <option>MTP</option>
+                    <option>NIV</option>
+                    <option>REG</option>
+                    <option>SEG</option>
+                    <option>SID</option>
+                    <option>MSE</option>
+                    <option>MRS</option>
+                </select>
+        
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Descrição</label>
+            <input type="text" class="form-control" name="componente">
+        </div>
+    
+    </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ação do Projeto</label>
+            <textarea class="form-control" name="acao_projeto" rows="3"></textarea>
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Localização</h5>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Município</label>
+
+                <select
+                    class="form-select"
+                    name="municipio"
+                    id="municipio">
+
+                    <option value="">Selecione</option>
+
+                    {% for municipio in municipios %}
+                        <option value="{{ municipio }}">
+                            {{ municipio }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Regional</label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    name="regional"
+                    id="regional"
+                    readonly>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Zona</label>
+
+                <select class="form-select" name="zona">
+                    <option value="">Selecione</option>
+                    <option>URBANO</option>
+                    <option>RURAL</option>
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Localização Geográfica</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Latitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    name="latitude"
+                    id="latitude">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Longitude</label>
+                <input
+                    type="number"
+                    step="any"
+                    class="form-control"
+                    name="longitude"
+                    id="longitude">
+            </div>
+
+        </div>
+
+        <label class="form-label">
+            Clique no mapa ou digite Latitude e Longitude
+        </label>
+
+        <div
+            id="mapCadastro"
+            style="
+                height:400px;
+                border-radius:12px;
+                overflow:hidden;
+                border:none;">
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Datas do Sistema</h5>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Data Cadastro</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    value="{{ data_cadastro }}"
+                    readonly>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Entrega Prevista</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    value="{{ entrega_prevista }}"
+                    readonly>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-sistema p-4 mb-4">
+
+        <h5 class="form-section-title">Anexo do Levantamento</h5>
+
+        <input
+            type="file"
+            class="form-control"
+            name="anexo_levantamento">
+
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4 mb-5">
+
+        <a href="/levantamentos" class="btn btn-secondary">
+            Cancelar
+        </a>
+
+        <button type="submit" class="btn btn-success">
+            Salvar Solicitação
+        </button>
+
+    </div>
+
+</form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+const municipiosRegionais = JSON.parse('{{ municipios_regionais | tojson | safe }}');
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const municipio = document.getElementById("municipio");
+    const regional = document.getElementById("regional");
+
+    municipio.addEventListener("change", function () {
+
+        const valor = municipio.value;
+
+        regional.value = municipiosRegionais[valor] || "";
+
+    });
+
+});
+
+var mapCadastro = L.map('mapCadastro').setView(
+    [-9.6658, -35.7353],
+    8
+);
+
+L.tileLayer(
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        maxZoom: 19
+    }
+).addTo(mapCadastro);
+
+var marcadorCadastro;
+
+mapCadastro.on('click', function(e){
+
+    let lat = e.latlng.lat;
+    let lng = e.latlng.lng;
+
+    document.getElementById("latitude").value = lat.toFixed(6);
+    document.getElementById("longitude").value = lng.toFixed(6);
+
+    atualizarMarcador(lat, lng);
+
+});
+
+document.getElementById("latitude").addEventListener("input", atualizarPeloCampo);
+document.getElementById("longitude").addEventListener("input", atualizarPeloCampo);
+
+function atualizarPeloCampo(){
+
+    let lat = parseFloat(document.getElementById("latitude").value);
+    let lng = parseFloat(document.getElementById("longitude").value);
+
+    if(!isNaN(lat) && !isNaN(lng)){
+        atualizarMarcador(lat, lng);
+    }
+
+}
+
+function atualizarMarcador(lat, lng){
+
+    if(marcadorCadastro){
+        mapCadastro.removeLayer(marcadorCadastro);
+    }
+
+    marcadorCadastro = L.marker([lat, lng]).addTo(mapCadastro);
+
+    mapCadastro.setView([lat, lng], 16);
+
+}
+
+</script>
+
+{% endblock %}
